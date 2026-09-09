@@ -14,8 +14,8 @@ it('seeds full footer cms pages and faq content', function () {
 
     expect(CmsPage::query()->where('type', 'faq')->where('is_published', true)->count())->toBeGreaterThanOrEqual(8);
 
-    $this->get(route('cms.show', 'kebijakan-privasi'))->assertOk()->assertSee('Data yang Kami Kumpulkan', false);
-    $this->get(route('cms.show', 'syarat-ketentuan'))->assertOk()->assertSee('Akun & Pemesanan', false);
-    $this->get(route('cms.show', 'kebijakan-retur'))->assertOk()->assertSee('Periode Pengajuan', false);
+    $this->get(route('cms.show', 'kebijakan-privasi'))->assertOk()->assertSee('Data yang Kami Kumpulkan');
+    $this->get(route('cms.show', 'syarat-ketentuan'))->assertOk()->assertSee('Akun &amp; Pemesanan', false);
+    $this->get(route('cms.show', 'kebijakan-retur'))->assertOk()->assertSee('Periode Pengajuan');
     $this->get(route('faq'))->assertOk()->assertSee('Berapa minimum order?');
 });
