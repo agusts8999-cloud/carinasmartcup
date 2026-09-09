@@ -12,6 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Cloudflare / aaPanel terminate SSL in front of Apache; trust X-Forwarded-* so
+        // Laravel/Livewire generate https URLs (otherwise Filament login POSTs are mixed-content blocked).
+        $middleware->trustProxies(at: '*');
+
         $middleware->web(append: [
             \App\Http\Middleware\EnsureCartToken::class,
         ]);
