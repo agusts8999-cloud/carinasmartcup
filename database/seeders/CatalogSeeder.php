@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Enums\ProductStatus;
 use App\Models\Category;
-use App\Models\CmsPage;
 use App\Models\Coupon;
 use App\Models\InventoryLocation;
 use App\Models\InventoryStock;
@@ -432,48 +431,7 @@ class CatalogSeeder extends Seeder
 
     private function seedCmsPages(): void
     {
-        $faqs = [
-            ['title' => 'Berapa minimum order?', 'slug' => 'faq-minimum-order', 'body' => 'Minimum order mengikuti pack size masing-masing varian, biasanya 50 atau 100 pcs.'],
-            ['title' => 'Apakah bisa ambil sendiri?', 'slug' => 'faq-pickup', 'body' => 'Ya, pickup tersedia di Gudang Utama dengan jam operasional Senin–Sabtu.'],
-            ['title' => 'Bagaimana cara bayar?', 'slug' => 'faq-pembayaran', 'body' => 'Pembayaran via transfer bank manual. Upload bukti setelah checkout.'],
-            ['title' => 'Apakah ada diskon volume?', 'slug' => 'faq-diskon-volume', 'body' => 'Ya, kategori Cup Plastik mendapat diskon hingga 15% untuk pembelian volume.'],
-            ['title' => 'Berapa lama pengiriman?', 'slug' => 'faq-pengiriman', 'body' => 'Estimasi 1–2 hari untuk Jabodetabek, 2–4 hari untuk Jawa, 4–7 hari luar Jawa.'],
-        ];
-
-        foreach ($faqs as $index => $faq) {
-            CmsPage::query()->updateOrCreate(
-                ['slug' => $faq['slug']],
-                [
-                    'title' => $faq['title'],
-                    'type' => 'faq',
-                    'body' => $faq['body'],
-                    'excerpt' => Str::limit($faq['body'], 120),
-                    'is_published' => true,
-                    'sort_order' => $index + 1,
-                ],
-            );
-        }
-
-        $pages = [
-            ['title' => 'Kebijakan Privasi', 'slug' => 'kebijakan-privasi', 'body' => '<p>Kebijakan privasi CarinaSmartCup melindungi data pelanggan.</p>'],
-            ['title' => 'Syarat & Ketentuan', 'slug' => 'syarat-ketentuan', 'body' => '<p>Syarat dan ketentuan berlaku untuk semua transaksi.</p>'],
-            ['title' => 'Kebijakan Retur', 'slug' => 'kebijakan-retur', 'body' => '<p>Retur dapat diajukan maksimal 7 hari setelah barang diterima.</p>'],
-            ['title' => 'Cara Belanja', 'slug' => 'cara-belanja', 'body' => '<p>Pilih produk, atur jumlah, checkout, bayar, dan tunggu pengiriman.</p>'],
-            ['title' => 'Tentang Kami', 'slug' => 'tentang-kami', 'body' => '<p>CarinaSmartCup menyediakan kemasan cup berkualitas untuk UMKM F&B.</p>'],
-        ];
-
-        foreach ($pages as $index => $page) {
-            CmsPage::query()->updateOrCreate(
-                ['slug' => $page['slug']],
-                [
-                    'title' => $page['title'],
-                    'type' => 'page',
-                    'body' => $page['body'],
-                    'is_published' => true,
-                    'sort_order' => $index + 1,
-                ],
-            );
-        }
+        $this->call(CmsContentSeeder::class);
     }
 
     private function seedSettings(): void

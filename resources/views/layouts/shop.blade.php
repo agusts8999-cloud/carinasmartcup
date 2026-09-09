@@ -83,10 +83,19 @@
 
     <footer class="mt-12 bg-emerald-900 text-emerald-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="lg:col-span-2">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
+                <div class="sm:col-span-2">
                     <p class="font-bold text-xl text-white mb-2">CarinaSmartCup</p>
                     <p class="text-emerald-200 text-sm leading-relaxed">Solusi kemasan cup berkualitas untuk bisnis F&amp;B Anda. Praktis, higienis, dan siap kirim ke seluruh Indonesia.</p>
+                </div>
+                <div>
+                    <p class="font-semibold text-white mb-3">Informasi</p>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="{{ route('cms.show', 'tentang-kami') }}" class="text-emerald-200 hover:text-white">Tentang Kami</a></li>
+                        <li><a href="{{ route('cms.show', 'cara-belanja') }}" class="text-emerald-200 hover:text-white">Cara Belanja</a></li>
+                        <li><a href="{{ route('shipping.check') }}" class="text-emerald-200 hover:text-white">Cek Ongkir</a></li>
+                        <li><a href="{{ route('order.track') }}" class="text-emerald-200 hover:text-white">Lacak Pesanan</a></li>
+                    </ul>
                 </div>
                 <div>
                     <p class="font-semibold text-white mb-3">Bantuan</p>
@@ -94,7 +103,7 @@
                         <li><a href="{{ route('faq') }}" class="text-emerald-200 hover:text-white">FAQ</a></li>
                         <li><a href="{{ route('cms.show', 'kebijakan-privasi') }}" class="text-emerald-200 hover:text-white">Kebijakan Privasi</a></li>
                         <li><a href="{{ route('cms.show', 'syarat-ketentuan') }}" class="text-emerald-200 hover:text-white">Syarat &amp; Ketentuan</a></li>
-                        <li><a href="{{ route('cms.show', 'retur') }}" class="text-emerald-200 hover:text-white">Retur</a></li>
+                        <li><a href="{{ route('cms.show', 'kebijakan-retur') }}" class="text-emerald-200 hover:text-white">Kebijakan Retur</a></li>
                     </ul>
                 </div>
                 <div>
@@ -102,6 +111,7 @@
                     <a href="https://wa.me/{{ config('carina.whatsapp_support') }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-sm text-emerald-200 hover:text-white">
                         WhatsApp Support
                     </a>
+                    <p class="mt-3 text-xs text-emerald-300 leading-relaxed">Senin–Sabtu, jam operasional gudang. Respon cepat via WhatsApp.</p>
                 </div>
             </div>
             <p class="mt-8 pt-6 border-t border-emerald-800 text-center text-xs text-emerald-300">&copy; {{ date('Y') }} CarinaSmartCup. Semua hak dilindungi.</p>
