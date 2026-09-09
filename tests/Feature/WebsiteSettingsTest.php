@@ -1,10 +1,12 @@
 <?php
 
+use App\Filament\Pages\ManageWebsiteSettings;
 use App\Models\User;
 use App\Services\SettingsService;
 use Database\Seeders\RoleSeeder;
 use Database\Seeders\WebsiteSettingsSeeder;
 use Illuminate\Support\Facades\Mail;
+use Livewire\Livewire;
 
 it('persists branding theme and whatsapp via SettingsService', function () {
     $this->seed(WebsiteSettingsSeeder::class);
@@ -121,4 +123,24 @@ it('preserves smtp password when not included in a later setMany', function () {
 
     expect($settings->get('mail.password'))->toBe('keep-me-secret')
         ->and($settings->get('mail.host'))->toBe('smtp.keep.test');
+});
+
+it('shows branding theme whatsapp and smtp sections on settings page', function () {
+    $this->seed(RoleSeeder::class);
+    $this->seed(WebsiteSettingsSeeder::class);
+
+    $admin = User::factory()->create();
+    $admin->assignRole('admin');
+
+    Livewire::actingAs($admin)
+        ->test(ManageWebsiteSettings::class)
+        ->assertOk()
+        ->assertSee('Nama Website')
+        ->assertSee('Logo')
+        ->assertSee('Favicon')
+        ->assertSee('Preset Tema Storefront')
+        ->assertSee('Nomor WhatsApp')
+        ->assertSee('Host SMTP')
+        ->assertSee('Simpan')
+        ->assertSee('Kirim Email Uji');
 });

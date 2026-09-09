@@ -14,8 +14,6 @@ use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\EmbeddedSchema;
 use Filament\Schemas\Components\Form;
 use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Tabs;
-use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Auth;
@@ -79,103 +77,87 @@ class ManageWebsiteSettings extends Page
 
         return $schema
             ->components([
-                Tabs::make('Settings')
-                    ->tabs([
-                        Tab::make('Branding')
-                            ->schema([
-                                Section::make('Identitas Website')
-                                    ->schema([
-                                        TextInput::make('site_name')
-                                            ->label('Nama Website')
-                                            ->required()
-                                            ->maxLength(120),
-                                        FileUpload::make('site_logo_path')
-                                            ->label('Logo')
-                                            ->image()
-                                            ->disk('public')
-                                            ->directory('branding')
-                                            ->visibility('public')
-                                            ->imagePreviewHeight('80'),
-                                        FileUpload::make('site_favicon_path')
-                                            ->label('Favicon')
-                                            ->image()
-                                            ->disk('public')
-                                            ->directory('branding')
-                                            ->visibility('public')
-                                            ->imagePreviewHeight('48'),
-                                    ]),
+                Section::make('Identitas Website')
+                    ->schema([
+                        TextInput::make('site_name')
+                            ->label('Nama Website')
+                            ->required()
+                            ->maxLength(120),
+                        FileUpload::make('site_logo_path')
+                            ->label('Logo')
+                            ->image()
+                            ->disk('public')
+                            ->directory('branding')
+                            ->visibility('public')
+                            ->imagePreviewHeight('80'),
+                        FileUpload::make('site_favicon_path')
+                            ->label('Favicon')
+                            ->image()
+                            ->disk('public')
+                            ->directory('branding')
+                            ->visibility('public')
+                            ->imagePreviewHeight('48'),
+                    ]),
+                Section::make('Preset Tema Storefront')
+                    ->schema([
+                        Select::make('theme_preset')
+                            ->label('Preset')
+                            ->options($presetOptions)
+                            ->required()
+                            ->native(false),
+                    ]),
+                Section::make('Kontak Support')
+                    ->schema([
+                        TextInput::make('contact_whatsapp')
+                            ->label('Nomor WhatsApp')
+                            ->helperText('Format internasional tanpa +, contoh: 6281234567890')
+                            ->required()
+                            ->regex('/^[0-9]{8,20}$/')
+                            ->maxLength(20),
+                    ]),
+                Section::make('Pengaturan Email')
+                    ->schema([
+                        Select::make('mail_mailer')
+                            ->label('Mailer')
+                            ->options([
+                                'smtp' => 'SMTP',
+                                'log' => 'Log (uji lokal)',
+                                'array' => 'Array',
+                            ])
+                            ->required(),
+                        TextInput::make('mail_host')
+                            ->label('Host SMTP')
+                            ->maxLength(255),
+                        TextInput::make('mail_port')
+                            ->label('Port')
+                            ->numeric()
+                            ->default(587),
+                        TextInput::make('mail_username')
+                            ->label('Username')
+                            ->maxLength(255),
+                        TextInput::make('mail_password')
+                            ->label('Password')
+                            ->password()
+                            ->revealable()
+                            ->dehydrated(fn (?string $state): bool => filled($state))
+                            ->helperText('Kosongkan jika tidak ingin mengubah password yang tersimpan.')
+                            ->maxLength(255),
+                        Select::make('mail_encryption')
+                            ->label('Enkripsi')
+                            ->options([
+                                'tls' => 'TLS',
+                                'ssl' => 'SSL',
+                                '' => 'Tidak ada',
                             ]),
-                        Tab::make('Tema')
-                            ->schema([
-                                Section::make('Preset Tema Storefront')
-                                    ->schema([
-                                        Select::make('theme_preset')
-                                            ->label('Preset')
-                                            ->options($presetOptions)
-                                            ->required()
-                                            ->native(false),
-                                    ]),
-                            ]),
-                        Tab::make('WhatsApp')
-                            ->schema([
-                                Section::make('Kontak Support')
-                                    ->schema([
-                                        TextInput::make('contact_whatsapp')
-                                            ->label('Nomor WhatsApp')
-                                            ->helperText('Format internasional tanpa +, contoh: 6281234567890')
-                                            ->required()
-                                            ->regex('/^[0-9]{8,20}$/')
-                                            ->maxLength(20),
-                                    ]),
-                            ]),
-                        Tab::make('SMTP')
-                            ->schema([
-                                Section::make('Pengaturan Email')
-                                    ->schema([
-                                        Select::make('mail_mailer')
-                                            ->label('Mailer')
-                                            ->options([
-                                                'smtp' => 'SMTP',
-                                                'log' => 'Log (uji lokal)',
-                                                'array' => 'Array',
-                                            ])
-                                            ->required(),
-                                        TextInput::make('mail_host')
-                                            ->label('Host SMTP')
-                                            ->maxLength(255),
-                                        TextInput::make('mail_port')
-                                            ->label('Port')
-                                            ->numeric()
-                                            ->default(587),
-                                        TextInput::make('mail_username')
-                                            ->label('Username')
-                                            ->maxLength(255),
-                                        TextInput::make('mail_password')
-                                            ->label('Password')
-                                            ->password()
-                                            ->revealable()
-                                            ->dehydrated(fn (?string $state): bool => filled($state))
-                                            ->helperText('Kosongkan jika tidak ingin mengubah password yang tersimpan.')
-                                            ->maxLength(255),
-                                        Select::make('mail_encryption')
-                                            ->label('Enkripsi')
-                                            ->options([
-                                                'tls' => 'TLS',
-                                                'ssl' => 'SSL',
-                                                '' => 'Tidak ada',
-                                            ]),
-                                        TextInput::make('mail_from_address')
-                                            ->label('From Address')
-                                            ->email()
-                                            ->maxLength(255),
-                                        TextInput::make('mail_from_name')
-                                            ->label('From Name')
-                                            ->maxLength(120),
-                                    ])
-                                    ->columns(2),
-                            ]),
+                        TextInput::make('mail_from_address')
+                            ->label('From Address')
+                            ->email()
+                            ->maxLength(255),
+                        TextInput::make('mail_from_name')
+                            ->label('From Name')
+                            ->maxLength(120),
                     ])
-                    ->columnSpanFull(),
+                    ->columns(2),
             ]);
     }
 
