@@ -4,18 +4,26 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ $title ?? 'CarinaSmartCup' }} — CarinaSmartCup</title>
+    <title>{{ ($title ?? $websiteName) }} — {{ $websiteName }}</title>
+    @if(! empty($websiteFaviconUrl))
+        <link rel="icon" href="{{ $websiteFaviconUrl }}">
+    @endif
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>:root { {!! $websiteThemeStyle !!} }</style>
 </head>
-<body class="font-sans antialiased bg-stone-50 text-gray-800">
-    <header class="sticky top-0 z-40 bg-white border-b border-emerald-100 shadow-sm">
+<body class="theme-shell font-sans antialiased text-gray-800" data-theme="{{ $websiteThemePreset }}">
+    <header class="brand-header">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-14 gap-3">
                 <a href="{{ route('home') }}" class="flex items-center gap-2 shrink-0">
-                    <span class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-emerald-600 text-white font-bold text-sm">C</span>
-                    <span class="font-bold text-emerald-800 text-lg hidden sm:inline">CarinaSmartCup</span>
+                    @if(! empty($websiteLogoUrl))
+                        <img src="{{ $websiteLogoUrl }}" alt="{{ $websiteName }}" class="h-9 w-auto max-w-[140px] object-contain">
+                    @else
+                        <span class="brand-mark">{{ strtoupper(substr($websiteName, 0, 1)) }}</span>
+                        <span class="brand-name">{{ $websiteName }}</span>
+                    @endif
                 </a>
 
                 <form action="{{ route('catalog') }}" method="GET" class="flex-1 max-w-md">
@@ -27,36 +35,39 @@
                             name="q"
                             value="{{ request('q') }}"
                             placeholder="Cari gelas, cup, kemasan..."
-                            class="w-full rounded-full border border-emerald-200 bg-stone-50 py-2 pl-4 pr-10 text-sm focus:border-emerald-500 focus:ring-emerald-500"
+                            class="brand-input focus:ring-1"
                         >
-                        <button type="submit" class="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-emerald-600 hover:text-emerald-800">
+                        <button type="submit" class="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 brand-link">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                         </button>
                     </div>
                 </form>
 
                 <div class="flex items-center gap-2 sm:gap-4 shrink-0">
-                    <a href="{{ route('cart') }}" class="relative p-2 text-emerald-700 hover:text-emerald-900" aria-label="Keranjang">
+                    <a href="{{ route('cart') }}" class="relative p-2 brand-link" aria-label="Keranjang">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                         <span
                             x-data="{ count: {{ $cartItemCount ?? 0 }} }"
                             x-on:cart-updated.window="count = $event.detail.count"
                             x-show="count > 0"
                             x-text="count"
-                            class="absolute -top-0.5 -right-0.5 min-w-[1.25rem] h-5 px-1 flex items-center justify-center rounded-full bg-teal-500 text-white text-xs font-semibold"
+                            class="brand-badge"
                         ></span>
                     </a>
 
                     @auth
-                        <a href="{{ route('account.orders') }}" class="hidden sm:inline text-sm font-medium text-emerald-700 hover:text-emerald-900">Akun</a>
+                        @if(auth()->user()->canAccessPanel(\Filament\Facades\Filament::getPanel('admin')))
+                            <a href="{{ url('/admin') }}" class="hidden sm:inline text-sm font-semibold brand-link">Dashboard Admin</a>
+                        @endif
+                        <a href="{{ route('account.orders') }}" class="hidden sm:inline text-sm font-medium brand-link">Akun</a>
                     @else
-                        <a href="{{ route('login') }}" class="hidden sm:inline text-sm font-medium text-emerald-700 hover:text-emerald-900">Masuk</a>
+                        <a href="{{ route('login') }}" class="hidden sm:inline text-sm font-medium brand-link">Masuk</a>
                     @endauth
                 </div>
             </div>
         </div>
 
-        <nav class="border-t border-emerald-50 bg-emerald-50/50 overflow-x-auto">
+        <nav class="brand-nav overflow-x-auto">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <ul class="flex gap-1 py-2 text-sm whitespace-nowrap">
                     @foreach([
@@ -69,7 +80,7 @@
                         ['Bantuan', route('faq')],
                     ] as [$label, $url])
                         <li>
-                            <a href="{{ $url }}" class="inline-block px-3 py-1.5 rounded-full text-emerald-800 hover:bg-emerald-100 font-medium">{{ $label }}</a>
+                            <a href="{{ $url }}" class="brand-nav-link">{{ $label }}</a>
                         </li>
                     @endforeach
                 </ul>
@@ -81,45 +92,45 @@
         {{ $slot }}
     </main>
 
-    <footer class="mt-12 bg-emerald-900 text-emerald-50">
+    <footer class="brand-footer">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
                 <div class="sm:col-span-2">
-                    <p class="font-bold text-xl text-white mb-2">CarinaSmartCup</p>
-                    <p class="text-emerald-200 text-sm leading-relaxed">Solusi kemasan cup berkualitas untuk bisnis F&amp;B Anda. Praktis, higienis, dan siap kirim ke seluruh Indonesia.</p>
+                    <p class="font-bold text-xl text-white mb-2">{{ $websiteName }}</p>
+                    <p class="brand-footer-muted text-sm leading-relaxed">Solusi kemasan cup berkualitas untuk bisnis F&amp;B Anda. Praktis, higienis, dan siap kirim ke seluruh Indonesia.</p>
                 </div>
                 <div>
                     <p class="font-semibold text-white mb-3">Informasi</p>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="{{ route('cms.show', 'tentang-kami') }}" class="text-emerald-200 hover:text-white">Tentang Kami</a></li>
-                        <li><a href="{{ route('cms.show', 'cara-belanja') }}" class="text-emerald-200 hover:text-white">Cara Belanja</a></li>
-                        <li><a href="{{ route('shipping.check') }}" class="text-emerald-200 hover:text-white">Cek Ongkir</a></li>
-                        <li><a href="{{ route('order.track') }}" class="text-emerald-200 hover:text-white">Lacak Pesanan</a></li>
+                        <li><a href="{{ route('cms.show', 'tentang-kami') }}" class="brand-footer-muted">Tentang Kami</a></li>
+                        <li><a href="{{ route('cms.show', 'cara-belanja') }}" class="brand-footer-muted">Cara Belanja</a></li>
+                        <li><a href="{{ route('shipping.check') }}" class="brand-footer-muted">Cek Ongkir</a></li>
+                        <li><a href="{{ route('order.track') }}" class="brand-footer-muted">Lacak Pesanan</a></li>
                     </ul>
                 </div>
                 <div>
                     <p class="font-semibold text-white mb-3">Bantuan</p>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="{{ route('faq') }}" class="text-emerald-200 hover:text-white">FAQ</a></li>
-                        <li><a href="{{ route('cms.show', 'kebijakan-privasi') }}" class="text-emerald-200 hover:text-white">Kebijakan Privasi</a></li>
-                        <li><a href="{{ route('cms.show', 'syarat-ketentuan') }}" class="text-emerald-200 hover:text-white">Syarat &amp; Ketentuan</a></li>
-                        <li><a href="{{ route('cms.show', 'kebijakan-retur') }}" class="text-emerald-200 hover:text-white">Kebijakan Retur</a></li>
+                        <li><a href="{{ route('faq') }}" class="brand-footer-muted">FAQ</a></li>
+                        <li><a href="{{ route('cms.show', 'kebijakan-privasi') }}" class="brand-footer-muted">Kebijakan Privasi</a></li>
+                        <li><a href="{{ route('cms.show', 'syarat-ketentuan') }}" class="brand-footer-muted">Syarat &amp; Ketentuan</a></li>
+                        <li><a href="{{ route('cms.show', 'kebijakan-retur') }}" class="brand-footer-muted">Kebijakan Retur</a></li>
                     </ul>
                 </div>
                 <div>
                     <p class="font-semibold text-white mb-3">Hubungi Kami</p>
-                    <a href="https://wa.me/{{ config('carina.whatsapp_support') }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-sm text-emerald-200 hover:text-white">
+                    <a href="https://wa.me/{{ $websiteWhatsapp }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-sm brand-footer-muted">
                         WhatsApp Support
                     </a>
-                    <p class="mt-3 text-xs text-emerald-300 leading-relaxed">Senin–Sabtu, jam operasional gudang. Respon cepat via WhatsApp.</p>
+                    <p class="mt-3 text-xs brand-footer-muted leading-relaxed">Senin–Sabtu, jam operasional gudang. Respon cepat via WhatsApp.</p>
                 </div>
             </div>
-            <p class="mt-8 pt-6 border-t border-emerald-800 text-center text-xs text-emerald-300">&copy; {{ date('Y') }} CarinaSmartCup. Semua hak dilindungi.</p>
+            <p class="mt-8 pt-6 border-t brand-footer-rule text-center text-xs">&copy; {{ date('Y') }} {{ $websiteName }}. Semua hak dilindungi.</p>
         </div>
     </footer>
 
     <a
-        href="https://wa.me/{{ config('carina.whatsapp_support') }}"
+        href="https://wa.me/{{ $websiteWhatsapp }}"
         target="_blank"
         rel="noopener"
         class="fixed bottom-5 right-5 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-green-500 text-white shadow-lg hover:bg-green-600 transition"

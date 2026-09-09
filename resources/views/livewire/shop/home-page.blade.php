@@ -62,7 +62,7 @@
         <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-8 text-center">
             <h2 class="text-xl font-bold text-emerald-900 mb-2">Butuh Bantuan Memilih?</h2>
             <p class="text-emerald-700 mb-4">Tim kami siap membantu Anda menemukan kemasan cup yang tepat.</p>
-            <a href="https://wa.me/{{ config('carina.whatsapp_support') }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-6 py-3 bg-green-500 text-white font-semibold rounded-full hover:bg-green-600 transition">
+            <a href="https://wa.me/{{ website()->whatsapp() }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-6 py-3 bg-green-500 text-white font-semibold rounded-full hover:bg-green-600 transition">
                 Chat WhatsApp
             </a>
         </div>

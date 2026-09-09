@@ -24,15 +24,25 @@ class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        return $panel
+        $settings = app(\App\Services\SettingsService::class);
+        $brandName = $settings->siteName();
+        $logoUrl = $settings->logoUrl();
+
+        $panel = $panel
             ->default()
             ->id('admin')
             ->path('admin')
             ->login()
-            ->brandName('CarinaSmartCup')
+            ->brandName($brandName)
             ->colors([
                 'primary' => Color::Emerald,
-            ])
+            ]);
+
+        if (filled($logoUrl)) {
+            $panel->brandLogo($logoUrl)->brandLogoHeight('2rem');
+        }
+
+        return $panel
             ->navigationGroups([
                 NavigationGroup::make('Katalog'),
                 NavigationGroup::make('Penjualan'),

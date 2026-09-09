@@ -94,7 +94,7 @@ class CmsContentSeeder extends Seeder
                 'body' => '<p>Tutup (flat/dome/ulir) harus dicocokkan dengan ukuran dan tipe cup. Gunakan filter katalog atau cek catatan kompatibilitas pada detail produk. Jika ragu, hubungi WhatsApp support sebelum checkout.</p>',
             ],
             [
-                'title' => 'Apakah produk aman untuk makanan &amp; minuman?',
+                'title' => 'Apakah produk aman untuk makanan & minuman?',
                 'slug' => 'faq-keamanan-produk',
                 'body' => '<p>Produk ditujukan untuk kebutuhan kemasan F&amp;B. Simpan di tempat bersih dan kering, jauhkan dari panas berlebih sesuai material. Ikuti panduan penggunaan pada deskripsi produk.</p>',
             ],

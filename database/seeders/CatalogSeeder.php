@@ -9,7 +9,6 @@ use App\Models\InventoryLocation;
 use App\Models\InventoryStock;
 use App\Models\Product;
 use App\Models\ProductVariant;
-use App\Models\Setting;
 use App\Models\ShippingRate;
 use App\Models\ShippingZone;
 use App\Models\VolumeRule;
@@ -436,21 +435,6 @@ class CatalogSeeder extends Seeder
 
     private function seedSettings(): void
     {
-        $settings = [
-            ['key' => 'bank.name', 'value' => config('carina.bank.name'), 'group' => 'payment'],
-            ['key' => 'bank.account_number', 'value' => config('carina.bank.account_number'), 'group' => 'payment'],
-            ['key' => 'bank.account_name', 'value' => config('carina.bank.account_name'), 'group' => 'payment'],
-            ['key' => 'whatsapp.support', 'value' => config('carina.whatsapp_support'), 'group' => 'contact'],
-        ];
-
-        foreach ($settings as $setting) {
-            Setting::query()->updateOrCreate(
-                ['key' => $setting['key']],
-                [
-                    'value' => $setting['value'],
-                    'group' => $setting['group'],
-                ],
-            );
-        }
+        $this->call(WebsiteSettingsSeeder::class);
     }
 }

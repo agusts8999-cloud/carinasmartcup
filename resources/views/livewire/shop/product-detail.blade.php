@@ -98,7 +98,7 @@
                     <span wire:loading.remove wire:target="addToCart">Tambah ke Keranjang</span>
                     <span wire:loading wire:target="addToCart">Menambahkan...</span>
                 </button>
-                <a href="https://wa.me/{{ config('carina.whatsapp_support') }}?text={{ urlencode('Halo, saya ingin tanya tentang '.$product->name) }}" target="_blank" rel="noopener" class="inline-flex items-center px-6 py-3 border border-green-500 text-green-700 font-semibold rounded-full hover:bg-green-50 transition">
+                <a href="https://wa.me/{{ website()->whatsapp() }}?text={{ urlencode('Halo, saya ingin tanya tentang '.$product->name) }}" target="_blank" rel="noopener" class="inline-flex items-center px-6 py-3 border border-green-500 text-green-700 font-semibold rounded-full hover:bg-green-50 transition">
                     Tanya via WA
                 </a>
             </div>

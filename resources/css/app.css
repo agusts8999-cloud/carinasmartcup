@@ -1,3 +1,96 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    :root {
+        --brand-50: #ecfdf5;
+        --brand-100: #d1fae5;
+        --brand-200: #a7f3d0;
+        --brand-500: #10b981;
+        --brand-600: #059669;
+        --brand-700: #047857;
+        --brand-800: #065f46;
+        --brand-900: #064e3b;
+        --brand-fg: #ffffff;
+        --page-bg: #fafaf9;
+    }
+
+    body.theme-shell {
+        background-color: var(--page-bg);
+    }
+}
+
+@layer components {
+    .brand-header {
+        @apply sticky top-0 z-40 bg-white shadow-sm;
+        border-bottom: 1px solid var(--brand-100);
+    }
+
+    .brand-mark {
+        @apply inline-flex items-center justify-center w-9 h-9 rounded-full font-bold text-sm;
+        background-color: var(--brand-600);
+        color: var(--brand-fg);
+    }
+
+    .brand-name {
+        @apply font-bold text-lg hidden sm:inline;
+        color: var(--brand-800);
+    }
+
+    .brand-nav {
+        border-top: 1px solid var(--brand-50);
+        background-color: color-mix(in srgb, var(--brand-50) 50%, white);
+    }
+
+    .brand-nav-link {
+        @apply inline-block px-3 py-1.5 rounded-full font-medium;
+        color: var(--brand-800);
+    }
+
+    .brand-nav-link:hover {
+        background-color: var(--brand-100);
+    }
+
+    .brand-link {
+        color: var(--brand-700);
+    }
+
+    .brand-link:hover {
+        color: var(--brand-900);
+    }
+
+    .brand-input {
+        @apply w-full rounded-full bg-stone-50 py-2 pl-4 pr-10 text-sm;
+        border: 1px solid var(--brand-200);
+    }
+
+    .brand-input:focus {
+        border-color: var(--brand-500);
+        --tw-ring-color: var(--brand-500);
+    }
+
+    .brand-footer {
+        @apply mt-12;
+        background-color: var(--brand-900);
+        color: var(--brand-50);
+    }
+
+    .brand-footer-muted {
+        color: var(--brand-200);
+    }
+
+    .brand-footer-muted:hover {
+        color: #fff;
+    }
+
+    .brand-footer-rule {
+        border-color: var(--brand-800);
+        color: var(--brand-300, var(--brand-200));
+    }
+
+    .brand-badge {
+        @apply absolute -top-0.5 -right-0.5 min-w-[1.25rem] h-5 px-1 flex items-center justify-center rounded-full text-white text-xs font-semibold;
+        background-color: var(--brand-500);
+    }
+}

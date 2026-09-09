@@ -42,5 +42,16 @@ class AdminUserSeeder extends Seeder
             ],
         );
         $warehouse->syncRoles(['warehouse']);
+
+        $admin = User::query()->updateOrCreate(
+            ['email' => 'admin@carinasmartcup.test'],
+            [
+                'name' => 'Admin Carina',
+                'password' => Hash::make('password'),
+                'whatsapp' => '6281444444444',
+                'email_verified_at' => now(),
+            ],
+        );
+        $admin->syncRoles(['admin']);
     }
 }

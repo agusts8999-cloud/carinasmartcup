@@ -17,5 +17,9 @@ it('seeds full footer cms pages and faq content', function () {
     $this->get(route('cms.show', 'kebijakan-privasi'))->assertOk()->assertSee('Data yang Kami Kumpulkan');
     $this->get(route('cms.show', 'syarat-ketentuan'))->assertOk()->assertSee('Akun &amp; Pemesanan', false);
     $this->get(route('cms.show', 'kebijakan-retur'))->assertOk()->assertSee('Periode Pengajuan');
-    $this->get(route('faq'))->assertOk()->assertSee('Berapa minimum order?');
+    $this->get(route('faq'))
+        ->assertOk()
+        ->assertSee('Berapa minimum order?')
+        ->assertSee('Apakah produk aman untuk makanan & minuman?')
+        ->assertDontSee('&amp;amp;');
 });
