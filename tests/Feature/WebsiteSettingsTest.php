@@ -31,7 +31,7 @@ it('renders storefront with site name whatsapp and theme preset', function () {
     $settings = app(SettingsService::class);
     $settings->setMany([
         'site.name' => 'Carina Brand Test',
-        'theme.preset' => 'navy',
+        'theme.preset' => 'rose',
         'contact.whatsapp' => '6281555123456',
         'whatsapp.support' => '6281555123456',
     ]);
@@ -40,9 +40,9 @@ it('renders storefront with site name whatsapp and theme preset', function () {
     $this->get(route('home'))
         ->assertOk()
         ->assertSee('Carina Brand Test', false)
-        ->assertSee('data-theme="navy"', false)
+        ->assertSee('data-theme="rose"', false)
         ->assertSee('wa.me/6281555123456', false)
-        ->assertSee('--brand-600: #1e3a5f', false);
+        ->assertSee('--brand-600: #e11d48', false);
 });
 
 it('shows Dashboard Admin link for admin role but not for customer', function () {
@@ -139,6 +139,10 @@ it('shows branding theme whatsapp and smtp sections on settings page', function 
         ->assertSee('Logo')
         ->assertSee('Favicon')
         ->assertSee('Preset Tema Storefront')
+        ->assertSee('Template Warna')
+        ->assertSee('Emerald')
+        ->assertSee('Ocean')
+        ->assertSee('Rose')
         ->assertSee('Nomor WhatsApp')
         ->assertSee('Host SMTP')
         ->assertSee('Simpan')

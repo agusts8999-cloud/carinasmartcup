@@ -3,10 +3,15 @@
 return [
     'default_preset' => 'emerald',
 
+    /*
+    | Three curated storefront color templates.
+    | Legacy keys (forest/slate/navy) map via legacy_map.
+    */
     'presets' => [
         'emerald' => [
             'label' => 'Emerald',
-            'description' => 'Hijau emerald — tampilan default CarinaSmartCup',
+            'description' => 'Hijau segar — default toko cup',
+            'swatch' => '#059669',
             'css' => [
                 '--brand-50' => '#ecfdf5',
                 '--brand-100' => '#d1fae5',
@@ -22,7 +27,8 @@ return [
         ],
         'ocean' => [
             'label' => 'Ocean',
-            'description' => 'Biru laut dengan aksen cyan',
+            'description' => 'Biru laut + aksen cyan',
+            'swatch' => '#0891b2',
             'css' => [
                 '--brand-50' => '#ecfeff',
                 '--brand-100' => '#cffafe',
@@ -36,57 +42,10 @@ return [
                 '--page-bg' => '#f8fafc',
             ],
         ],
-        'forest' => [
-            'label' => 'Forest',
-            'description' => 'Hijau tua dengan latar cream lembut',
-            'css' => [
-                '--brand-50' => '#f3f6f1',
-                '--brand-100' => '#e4ebdf',
-                '--brand-200' => '#c9d7bf',
-                '--brand-500' => '#5f7d4f',
-                '--brand-600' => '#4a643d',
-                '--brand-700' => '#3b5031',
-                '--brand-800' => '#2f4028',
-                '--brand-900' => '#24321f',
-                '--brand-fg' => '#ffffff',
-                '--page-bg' => '#f7f4ee',
-            ],
-        ],
-        'slate' => [
-            'label' => 'Slate',
-            'description' => 'Abu gelap dengan aksen lime',
-            'css' => [
-                '--brand-50' => '#f8fafc',
-                '--brand-100' => '#f1f5f9',
-                '--brand-200' => '#e2e8f0',
-                '--brand-500' => '#84cc16',
-                '--brand-600' => '#65a30d',
-                '--brand-700' => '#4d7c0f',
-                '--brand-800' => '#334155',
-                '--brand-900' => '#0f172a',
-                '--brand-fg' => '#ffffff',
-                '--page-bg' => '#f8fafc',
-            ],
-        ],
-        'navy' => [
-            'label' => 'Navy',
-            'description' => 'Navy dengan aksen emas lembut',
-            'css' => [
-                '--brand-50' => '#f8fafc',
-                '--brand-100' => '#eef2ff',
-                '--brand-200' => '#dbe3f5',
-                '--brand-500' => '#c4a35a',
-                '--brand-600' => '#1e3a5f',
-                '--brand-700' => '#172b46',
-                '--brand-800' => '#122238',
-                '--brand-900' => '#0b1624',
-                '--brand-fg' => '#ffffff',
-                '--page-bg' => '#f5f7fb',
-            ],
-        ],
         'rose' => [
             'label' => 'Rose',
-            'description' => 'Rose gelap dengan nuansa stone',
+            'description' => 'Merah rose gelap + stone',
+            'swatch' => '#e11d48',
             'css' => [
                 '--brand-50' => '#fff1f2',
                 '--brand-100' => '#ffe4e6',
@@ -100,5 +59,11 @@ return [
                 '--page-bg' => '#fafaf9',
             ],
         ],
+    ],
+
+    'legacy_map' => [
+        'forest' => 'emerald',
+        'slate' => 'ocean',
+        'navy' => 'rose',
     ],
 ];

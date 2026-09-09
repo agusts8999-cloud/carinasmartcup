@@ -117,7 +117,16 @@ class SettingsService
         $preset = (string) ($this->get('theme.preset') ?: config('website.default_preset', 'emerald'));
         $presets = config('website.presets', []);
 
-        return array_key_exists($preset, $presets) ? $preset : 'emerald';
+        if (array_key_exists($preset, $presets)) {
+            return $preset;
+        }
+
+        $legacy = config('website.legacy_map', []);
+        if (isset($legacy[$preset]) && array_key_exists($legacy[$preset], $presets)) {
+            return $legacy[$preset];
+        }
+
+        return 'emerald';
     }
 
     /**

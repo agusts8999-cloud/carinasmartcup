@@ -6,6 +6,7 @@ use App\Services\SettingsService;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
@@ -70,9 +71,15 @@ class ManageWebsiteSettings extends Page
     public function form(Schema $schema): Schema
     {
         $presetOptions = collect(config('website.presets', []))
-            ->mapWithKeys(fn (array $preset, string $key) => [
-                $key => ($preset['label'] ?? $key).' — '.($preset['description'] ?? ''),
-            ])
+            ->mapWithKeys(function (array $preset, string $key) {
+                $swatch = $preset['swatch'] ?? ($preset['css']['--brand-600'] ?? '#059669');
+                $label = $preset['label'] ?? $key;
+                $description = $preset['description'] ?? '';
+
+                return [
+                    $key => "{$label} ({$swatch}) — {$description}",
+                ];
+            })
             ->all();
 
         return $schema
@@ -99,12 +106,18 @@ class ManageWebsiteSettings extends Page
                             ->imagePreviewHeight('48'),
                     ]),
                 Section::make('Preset Tema Storefront')
+                    ->description('Pilih salah satu dari 3 template warna. Perubahan langsung terlihat di toko setelah disimpan.')
                     ->schema([
-                        Select::make('theme_preset')
-                            ->label('Preset')
+                        Radio::make('theme_preset')
+                            ->label('Template Warna')
                             ->options($presetOptions)
+                            ->descriptions([
+                                'emerald' => 'Swatch utama: hijau #059669',
+                                'ocean' => 'Swatch utama: cyan #0891b2',
+                                'rose' => 'Swatch utama: rose #e11d48',
+                            ])
                             ->required()
-                            ->native(false),
+                            ->inline(false),
                     ]),
                 Section::make('Kontak Support')
                     ->schema([
@@ -124,7 +137,8 @@ class ManageWebsiteSettings extends Page
                                 'log' => 'Log (uji lokal)',
                                 'array' => 'Array',
                             ])
-                            ->required(),
+                            ->required()
+                            ->native(true),
                         TextInput::make('mail_host')
                             ->label('Host SMTP')
                             ->maxLength(255),
@@ -148,7 +162,8 @@ class ManageWebsiteSettings extends Page
                                 'tls' => 'TLS',
                                 'ssl' => 'SSL',
                                 '' => 'Tidak ada',
-                            ]),
+                            ])
+                            ->native(true),
                         TextInput::make('mail_from_address')
                             ->label('From Address')
                             ->email()
