@@ -26,6 +26,8 @@
 /vendor
 /import/images/*
 !/import/images/.gitkeep
+/import/*.inspect.ndjson
+/database/*.sqlite
 _ide_helper.php
 Homestead.json
 Homestead.yaml
