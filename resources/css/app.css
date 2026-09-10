@@ -14,17 +14,70 @@
         --brand-900: #064e3b;
         --brand-fg: #ffffff;
         --page-bg: #fafaf9;
+        --surface: #ffffff;
+        --surface-muted: #f5f5f4;
+        --text-primary: #1f2937;
+        --text-secondary: #4b5563;
+        --border-subtle: #e7e5e4;
+    }
+
+    html.dark {
+        --page-bg: #0b1220;
+        --surface: #111827;
+        --surface-muted: #0f172a;
+        --text-primary: #e2e8f0;
+        --text-secondary: #94a3b8;
+        --border-subtle: #334155;
+        color-scheme: dark;
     }
 
     body.theme-shell {
         background-color: var(--page-bg);
+        color: var(--text-primary);
+    }
+
+    html.dark body.theme-shell .bg-white {
+        background-color: var(--surface) !important;
+    }
+
+    html.dark body.theme-shell .bg-stone-50,
+    html.dark body.theme-shell .bg-gray-50,
+    html.dark body.theme-shell .bg-emerald-50 {
+        background-color: var(--surface-muted) !important;
+    }
+
+    html.dark body.theme-shell .text-gray-900,
+    html.dark body.theme-shell .text-gray-800 {
+        color: var(--text-primary) !important;
+    }
+
+    html.dark body.theme-shell .text-gray-600,
+    html.dark body.theme-shell .text-gray-500,
+    html.dark body.theme-shell .text-stone-600 {
+        color: var(--text-secondary) !important;
+    }
+
+    html.dark body.theme-shell .border-gray-200,
+    html.dark body.theme-shell .border-emerald-100,
+    html.dark body.theme-shell .border-stone-200 {
+        border-color: var(--border-subtle) !important;
+    }
+
+    html.dark body.theme-shell .hover\:bg-emerald-50:hover,
+    html.dark body.theme-shell .hover\:bg-gray-50:hover {
+        background-color: #1e293b !important;
     }
 }
 
 @layer components {
     .brand-header {
-        @apply sticky top-0 z-40 bg-white shadow-sm;
+        @apply sticky top-0 z-40 shadow-sm;
+        background-color: var(--surface);
         border-bottom: 1px solid var(--brand-100);
+    }
+
+    html.dark .brand-header {
+        border-bottom-color: var(--border-subtle);
     }
 
     .brand-mark {
@@ -38,9 +91,18 @@
         color: var(--brand-800);
     }
 
+    html.dark .brand-name {
+        color: var(--brand-200);
+    }
+
     .brand-nav {
         border-top: 1px solid var(--brand-50);
         background-color: color-mix(in srgb, var(--brand-50) 50%, white);
+    }
+
+    html.dark .brand-nav {
+        border-top-color: var(--border-subtle);
+        background-color: color-mix(in srgb, var(--brand-900) 55%, #0f172a);
     }
 
     .brand-nav-link {
@@ -48,21 +110,43 @@
         color: var(--brand-800);
     }
 
+    html.dark .brand-nav-link {
+        color: var(--brand-100);
+    }
+
     .brand-nav-link:hover {
         background-color: var(--brand-100);
+    }
+
+    html.dark .brand-nav-link:hover {
+        background-color: #1e293b;
     }
 
     .brand-link {
         color: var(--brand-700);
     }
 
+    html.dark .brand-link {
+        color: var(--brand-200);
+    }
+
     .brand-link:hover {
         color: var(--brand-900);
     }
 
+    html.dark .brand-link:hover {
+        color: #fff;
+    }
+
     .brand-input {
-        @apply w-full rounded-full bg-stone-50 py-2 pl-4 pr-10 text-sm;
+        @apply w-full rounded-full py-2 pl-4 pr-10 text-sm;
+        background-color: var(--surface-muted);
+        color: var(--text-primary);
         border: 1px solid var(--brand-200);
+    }
+
+    html.dark .brand-input {
+        border-color: var(--border-subtle);
     }
 
     .brand-input:focus {
@@ -92,5 +176,22 @@
     .brand-badge {
         @apply absolute -top-0.5 -right-0.5 min-w-[1.25rem] h-5 px-1 flex items-center justify-center rounded-full text-white text-xs font-semibold;
         background-color: var(--brand-500);
+    }
+
+    .color-mode-toggle {
+        @apply inline-flex items-center justify-center p-2 rounded-full transition;
+        color: var(--brand-700);
+    }
+
+    .color-mode-toggle:hover {
+        background-color: var(--brand-100);
+    }
+
+    html.dark .color-mode-toggle {
+        color: var(--brand-200);
+    }
+
+    html.dark .color-mode-toggle:hover {
+        background-color: #1e293b;
     }
 }

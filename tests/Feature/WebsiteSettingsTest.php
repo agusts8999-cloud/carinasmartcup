@@ -125,6 +125,13 @@ it('preserves smtp password when not included in a later setMany', function () {
         ->and($settings->get('mail.host'))->toBe('smtp.keep.test');
 });
 
+it('shows color mode toggle on the storefront', function () {
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertSee('Ganti mode gelap/terang', false)
+        ->assertSee('color-mode', false);
+});
+
 it('shows branding theme whatsapp and smtp sections on settings page', function () {
     $this->seed(RoleSeeder::class);
     $this->seed(WebsiteSettingsSeeder::class);
