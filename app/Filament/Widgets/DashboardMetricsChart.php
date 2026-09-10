@@ -2,80 +2,55 @@
 
 namespace App\Filament\Widgets;
 
-use App\Enums\OrderStatus;
-use App\Enums\PaymentStatus;
-use App\Models\InventoryStock;
-use App\Models\Order;
-use App\Models\Payment;
+use App\Support\DashboardMetrics;
 use Filament\Widgets\ChartWidget;
 
 class DashboardMetricsChart extends ChartWidget
 {
-    protected ?string $heading = 'Ringkasan Metrik';
+    protected ?string $heading = 'Tren 7 Hari';
 
-    protected ?string $description = 'Visualisasi 4 kartu statistik di bawah. Pendapatan ditampilkan dalam juta Rupiah.';
+    protected ?string $description = 'Pesanan harian (garis) dan pendapatan dalam juta Rupiah (batang).';
 
-    protected static ?int $sort = 0;
+    protected static ?int $sort = 2;
 
-    protected ?string $maxHeight = '280px';
+    protected ?string $maxHeight = '320px';
 
     protected int|string|array $columnSpan = 'full';
 
+    protected static bool $isLazy = false;
+
+    protected ?string $pollingInterval = '60s';
+
     protected function getData(): array
     {
-        $ordersToday = Order::query()
-            ->whereDate('created_at', today())
-            ->count();
-
-        $pendingPayments = Payment::query()
-            ->whereIn('status', [PaymentStatus::Pending, PaymentStatus::AwaitingConfirmation])
-            ->count();
-
-        $revenueThisMonth = (float) Order::query()
-            ->where('status', '!=', OrderStatus::Cancelled)
-            ->whereNotNull('paid_at')
-            ->whereMonth('paid_at', now()->month)
-            ->whereYear('paid_at', now()->year)
-            ->sum('total');
-
-        $revenueInMillions = round($revenueThisMonth / 1_000_000, 2);
-
-        $lowStockCount = InventoryStock::query()
-            ->whereRaw('(qty_on_hand - qty_reserved) < 10')
-            ->count();
+        $series = app(DashboardMetrics::class)->lastSevenDays();
 
         return [
             'datasets' => [
                 [
-                    'label' => 'Nilai',
-                    'data' => [
-                        $ordersToday,
-                        $pendingPayments,
-                        $revenueInMillions,
-                        $lowStockCount,
-                    ],
-                    'backgroundColor' => [
-                        'rgba(16, 185, 129, 0.75)',
-                        'rgba(245, 158, 11, 0.75)',
-                        'rgba(34, 197, 94, 0.75)',
-                        'rgba(239, 68, 68, 0.75)',
-                    ],
-                    'borderColor' => [
-                        'rgb(16, 185, 129)',
-                        'rgb(245, 158, 11)',
-                        'rgb(34, 197, 94)',
-                        'rgb(239, 68, 68)',
-                    ],
+                    'type' => 'line',
+                    'label' => 'Pesanan',
+                    'data' => $series['orders'],
+                    'borderColor' => 'rgb(16, 185, 129)',
+                    'backgroundColor' => 'rgba(16, 185, 129, 0.15)',
+                    'tension' => 0.35,
+                    'fill' => true,
+                    'yAxisID' => 'y',
+                    'pointRadius' => 3,
+                    'pointHoverRadius' => 5,
+                ],
+                [
+                    'type' => 'bar',
+                    'label' => 'Pendapatan (Juta Rp)',
+                    'data' => $series['revenue_millions'],
+                    'backgroundColor' => 'rgba(59, 130, 246, 0.55)',
+                    'borderColor' => 'rgb(59, 130, 246)',
                     'borderWidth' => 1,
                     'borderRadius' => 6,
+                    'yAxisID' => 'y1',
                 ],
             ],
-            'labels' => [
-                'Pesanan Hari Ini',
-                'Pembayaran Tertunda',
-                'Pendapatan (Juta Rp)',
-                'Stok Rendah',
-            ],
+            'labels' => $series['labels'],
         ];
     }
 
@@ -90,16 +65,32 @@ class DashboardMetricsChart extends ChartWidget
     protected function getOptions(): array
     {
         return [
+            'animation' => [
+                'duration' => 900,
+                'easing' => 'easeOutQuart',
+            ],
             'plugins' => [
                 'legend' => [
-                    'display' => false,
+                    'display' => true,
+                    'position' => 'bottom',
                 ],
             ],
             'scales' => [
                 'y' => [
                     'beginAtZero' => true,
+                    'position' => 'left',
                     'ticks' => [
                         'precision' => 0,
+                    ],
+                    'grid' => [
+                        'drawOnChartArea' => true,
+                    ],
+                ],
+                'y1' => [
+                    'beginAtZero' => true,
+                    'position' => 'right',
+                    'grid' => [
+                        'drawOnChartArea' => false,
                     ],
                 ],
             ],

@@ -2,11 +2,7 @@
 
 namespace App\Filament\Widgets;
 
-use App\Enums\OrderStatus;
-use App\Enums\PaymentStatus;
-use App\Models\InventoryStock;
-use App\Models\Order;
-use App\Models\Payment;
+use App\Support\DashboardMetrics;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
@@ -16,44 +12,45 @@ class StatsOverview extends BaseWidget
 
     protected int | string | array $columnSpan = 'full';
 
+    protected static bool $isLazy = false;
+
+    protected ?string $pollingInterval = '60s';
+
     protected function getStats(): array
     {
-        $ordersToday = Order::query()
-            ->whereDate('created_at', today())
-            ->count();
-
-        $pendingPayments = Payment::query()
-            ->whereIn('status', [PaymentStatus::Pending, PaymentStatus::AwaitingConfirmation])
-            ->count();
-
-        $revenueThisMonth = Order::query()
-            ->where('status', '!=', OrderStatus::Cancelled)
-            ->whereNotNull('paid_at')
-            ->whereMonth('paid_at', now()->month)
-            ->whereYear('paid_at', now()->year)
-            ->sum('total');
-
-        $lowStockCount = InventoryStock::query()
-            ->whereRaw('(qty_on_hand - qty_reserved) < 10')
-            ->count();
+        $metrics = app(DashboardMetrics::class);
+        $kpi = $metrics->kpi();
+        $series = $metrics->lastSevenDays();
 
         return [
-            Stat::make('Pesanan Hari Ini', number_format($ordersToday))
+            Stat::make('Pesanan Hari Ini', number_format($kpi['orders_today']))
                 ->description('Total pesanan masuk hari ini')
                 ->descriptionIcon('heroicon-m-shopping-bag')
-                ->color('primary'),
-            Stat::make('Pembayaran Tertunda', number_format($pendingPayments))
+                ->chart($series['orders'])
+                ->chartColor('primary')
+                ->color('primary')
+                ->extraAttributes(['class' => 'enterprise-kpi dash-fade-up dash-delay-1']),
+            Stat::make('Pembayaran Tertunda', number_format($kpi['pending_payments']))
                 ->description('Menunggu konfirmasi')
                 ->descriptionIcon('heroicon-m-banknotes')
-                ->color('warning'),
-            Stat::make('Pendapatan Bulan Ini', 'Rp '.number_format($revenueThisMonth, 0, ',', '.'))
+                ->chart($series['pending_payments'])
+                ->chartColor('warning')
+                ->color('warning')
+                ->extraAttributes(['class' => 'enterprise-kpi dash-fade-up dash-delay-2']),
+            Stat::make('Pendapatan Bulan Ini', 'Rp '.number_format($kpi['revenue_month'], 0, ',', '.'))
                 ->description(now()->translatedFormat('F Y'))
                 ->descriptionIcon('heroicon-m-currency-dollar')
-                ->color('success'),
-            Stat::make('Stok Rendah', number_format($lowStockCount))
+                ->chart($series['revenue_millions'])
+                ->chartColor('success')
+                ->color('success')
+                ->extraAttributes(['class' => 'enterprise-kpi dash-fade-up dash-delay-3']),
+            Stat::make('Stok Rendah', number_format($kpi['low_stock']))
                 ->description('Di bawah 10 unit tersedia')
                 ->descriptionIcon('heroicon-m-exclamation-triangle')
-                ->color('danger'),
+                ->chart(array_fill(0, 7, max(1, $kpi['low_stock'])))
+                ->chartColor('danger')
+                ->color('danger')
+                ->extraAttributes(['class' => 'enterprise-kpi dash-fade-up dash-delay-4']),
         ];
     }
 }

@@ -2,7 +2,11 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Dashboard;
+use App\Filament\Widgets\AttentionQueueWidget;
 use App\Filament\Widgets\DashboardMetricsChart;
+use App\Filament\Widgets\EnterpriseHeroWidget;
+use App\Filament\Widgets\RecentOrdersWidget;
 use App\Filament\Widgets\StatsOverview;
 use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
@@ -10,16 +14,17 @@ use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationGroup;
-use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets\AccountWidget;
+use Filament\Support\Facades\FilamentView;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
@@ -29,6 +34,11 @@ class AdminPanelProvider extends PanelProvider
         $settings = app(\App\Services\SettingsService::class);
         $brandName = $settings->siteName();
         $logoUrl = $settings->logoUrl();
+
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::STYLES_AFTER,
+            fn (): string => Blade::render("@vite('resources/css/filament/admin-dashboard.css')"),
+        );
 
         $panel = $panel
             ->default()
@@ -63,9 +73,11 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
-                DashboardMetricsChart::class,
+                EnterpriseHeroWidget::class,
                 StatsOverview::class,
-                AccountWidget::class,
+                DashboardMetricsChart::class,
+                AttentionQueueWidget::class,
+                RecentOrdersWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
