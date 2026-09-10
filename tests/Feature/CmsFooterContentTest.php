@@ -21,5 +21,7 @@ it('seeds full footer cms pages and faq content', function () {
         ->assertOk()
         ->assertSee('Berapa minimum order?')
         ->assertSee('Apakah produk aman untuk makanan & minuman?')
-        ->assertDontSee('&amp;amp;');
+        ->assertDontSee('&amp;amp;')
+        ->assertSee('Login Admin')
+        ->assertSee('/admin/login', false);
 });

@@ -115,6 +115,7 @@
                         <li><a href="{{ route('cms.show', 'kebijakan-privasi') }}" class="brand-footer-muted">Kebijakan Privasi</a></li>
                         <li><a href="{{ route('cms.show', 'syarat-ketentuan') }}" class="brand-footer-muted">Syarat &amp; Ketentuan</a></li>
                         <li><a href="{{ route('cms.show', 'kebijakan-retur') }}" class="brand-footer-muted">Kebijakan Retur</a></li>
+                        <li><a href="{{ url('/admin/login') }}" class="brand-footer-muted">Login Admin</a></li>
                     </ul>
                 </div>
                 <div>
